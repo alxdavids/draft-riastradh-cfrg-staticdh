@@ -8,17 +8,13 @@
 <meta content="Taylor R. Campbell" name="author">
 <meta content="
        A  static Diffie-Hellman (DH) oracle  is an oracle that multiplies a
- given base point P by a secret scalar x, yielding x*P.
-Protocols based on oblivious pseudorandom function families (OPRF,
-  ), such as OPAQUE  
- and Privacy Pass  , often expose
- static DH oracles to adversaries, and rely on the adversary's
- inability either to recover the secret scalar or to compute the scalar
- multiplication of random base points without submitting them to the
- oracle. 
-       This memo summarizes the state of the art in attacks on discrete log
- and OPRF security enabled by static DH oracles, and the resistance of
- widely used groups to such attacks.
+ given base point P in a group by a secret scalar x, yielding x*P.
+Certain cryptographic protocols such as oblivious pseudorandom function
+ families (OPRFs) rely on an adversary's inability either to recover x
+ or to compute x*Q at a random point Q chosen after queries to the
+ static DH oracle.
+This memo summarizes the state of the art in attacks enabled by static
+ DH oracles, and the resistance of widely used groups to such attacks.
 This memo concludes that static DH oracles do not meaningfully threaten
  the security of any DH groups recommended by the IETF. 
     " name="description">
@@ -870,19 +866,15 @@ address div.right {
 <section id="section-abstract">
       <h2 id="abstract"><a href="#abstract" class="selfRef">Abstract</a></h2>
 <p id="section-abstract-1">A <strong>static Diffie-Hellman (DH) oracle</strong> is an oracle that multiplies a
- given base point P by a secret scalar x, yielding x*P.
-Protocols based on oblivious pseudorandom function families (OPRF,
- <span>[<a href="#I-D.irtf-cfrg-voprf" class="xref">I-D.irtf-cfrg-voprf</a>]</span>), such as OPAQUE <span>[<a href="#I-D.irtf-cfrg-opaque" class="xref">I-D.irtf-cfrg-opaque</a>]</span>
- and Privacy Pass <span>[<a href="#I-D.ietf-privacypass-protocol" class="xref">I-D.ietf-privacypass-protocol</a>]</span>, often expose
- static DH oracles to adversaries, and rely on the adversary's
- inability either to recover the secret scalar or to compute the scalar
- multiplication of random base points without submitting them to the
- oracle.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
-<p id="section-abstract-2">This memo summarizes the state of the art in attacks on discrete log
- and OPRF security enabled by static DH oracles, and the resistance of
- widely used groups to such attacks.
+ given base point P in a group by a secret scalar x, yielding x*P.
+Certain cryptographic protocols such as oblivious pseudorandom function
+ families (OPRFs) rely on an adversary's inability either to recover x
+ or to compute x*Q at a random point Q chosen after queries to the
+ static DH oracle.
+This memo summarizes the state of the art in attacks enabled by static
+ DH oracles, and the resistance of widely used groups to such attacks.
 This memo concludes that static DH oracles do not meaningfully threaten
- the security of any DH groups recommended by the IETF.<a href="#section-abstract-2" class="pilcrow">¶</a></p>
+ the security of any DH groups recommended by the IETF.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
 </section>
 <section class="note rfcEditorRemove" id="section-note.1">
       <h2 id="name-discussion-venues">
@@ -942,85 +934,85 @@ This memo concludes that static DH oracles do not meaningfully threaten
         <a href="#" onclick="scroll(0,0)" class="toplink">▲</a><h2 id="name-table-of-contents">
 <a href="#name-table-of-contents" class="section-name selfRef">Table of Contents</a>
         </h2>
-<nav class="toc"><ul class="compact toc ulEmpty">
-<li class="compact toc ulEmpty" id="section-toc.1-1.1">
+<nav class="toc"><ul class="ulEmpty compact toc">
+<li class="ulEmpty compact toc" id="section-toc.1-1.1">
             <p id="section-toc.1-1.1.1" class="keepWithNext"><a href="#section-1" class="xref">1</a>.  <a href="#name-introduction" class="xref">Introduction</a><a href="#section-toc.1-1.1.1" class="pilcrow">¶</a></p>
-<ul class="compact toc ulEmpty">
-<li class="compact toc ulEmpty" id="section-toc.1-1.1.2.1">
+<ul class="ulEmpty compact toc">
+<li class="ulEmpty compact toc" id="section-toc.1-1.1.2.1">
                 <p id="section-toc.1-1.1.2.1.1" class="keepWithNext"><a href="#section-1.1" class="xref">1.1</a>.  <a href="#name-taxonomy-of-problems" class="xref">Taxonomy of Problems</a><a href="#section-toc.1-1.1.2.1.1" class="pilcrow">¶</a></p>
 </li>
             </ul>
 </li>
-          <li class="compact toc ulEmpty" id="section-toc.1-1.2">
+          <li class="ulEmpty compact toc" id="section-toc.1-1.2">
             <p id="section-toc.1-1.2.1" class="keepWithNext"><a href="#section-2" class="xref">2</a>.  <a href="#name-conventions-and-definitions" class="xref">Conventions and Definitions</a><a href="#section-toc.1-1.2.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="compact toc ulEmpty" id="section-toc.1-1.3">
+          <li class="ulEmpty compact toc" id="section-toc.1-1.3">
             <p id="section-toc.1-1.3.1"><a href="#section-3" class="xref">3</a>.  <a href="#name-static-dh-oracle-examples" class="xref">Static DH Oracle Examples</a><a href="#section-toc.1-1.3.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="compact toc ulEmpty" id="section-toc.1-1.4">
+          <li class="ulEmpty compact toc" id="section-toc.1-1.4">
             <p id="section-toc.1-1.4.1"><a href="#section-4" class="xref">4</a>.  <a href="#name-assumptions" class="xref">Assumptions</a><a href="#section-toc.1-1.4.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="compact toc ulEmpty" id="section-toc.1-1.5">
+          <li class="ulEmpty compact toc" id="section-toc.1-1.5">
             <p id="section-toc.1-1.5.1"><a href="#section-5" class="xref">5</a>.  <a href="#name-generic-static-dh-attacks" class="xref">Generic Static DH Attacks</a><a href="#section-toc.1-1.5.1" class="pilcrow">¶</a></p>
-<ul class="compact toc ulEmpty">
-<li class="compact toc ulEmpty" id="section-toc.1-1.5.2.1">
+<ul class="ulEmpty compact toc">
+<li class="ulEmpty compact toc" id="section-toc.1-1.5.2.1">
                 <p id="section-toc.1-1.5.2.1.1"><a href="#section-5.1" class="xref">5.1</a>.  <a href="#name-p-1-attack" class="xref">p - 1 Attack</a><a href="#section-toc.1-1.5.2.1.1" class="pilcrow">¶</a></p>
 </li>
-              <li class="compact toc ulEmpty" id="section-toc.1-1.5.2.2">
+              <li class="ulEmpty compact toc" id="section-toc.1-1.5.2.2">
                 <p id="section-toc.1-1.5.2.2.1"><a href="#section-5.2" class="xref">5.2</a>.  <a href="#name-p-1-attack-in-quadratic-ext" class="xref">p + 1 Attack in Quadratic Extension</a><a href="#section-toc.1-1.5.2.2.1" class="pilcrow">¶</a></p>
 </li>
-              <li class="compact toc ulEmpty" id="section-toc.1-1.5.2.3">
+              <li class="ulEmpty compact toc" id="section-toc.1-1.5.2.3">
                 <p id="section-toc.1-1.5.2.3.1"><a href="#section-5.3" class="xref">5.3</a>.  <a href="#name-generalizations-of-the-p-1-" class="xref">Generalizations of the p - 1 and p + 1 Attacks</a><a href="#section-toc.1-1.5.2.3.1" class="pilcrow">¶</a></p>
 </li>
-              <li class="compact toc ulEmpty" id="section-toc.1-1.5.2.4">
+              <li class="ulEmpty compact toc" id="section-toc.1-1.5.2.4">
                 <p id="section-toc.1-1.5.2.4.1"><a href="#section-5.4" class="xref">5.4</a>.  <a href="#name-multi-target-attacks" class="xref">Multi-Target Attacks</a><a href="#section-toc.1-1.5.2.4.1" class="pilcrow">¶</a></p>
 </li>
             </ul>
 </li>
-          <li class="compact toc ulEmpty" id="section-toc.1-1.6">
+          <li class="ulEmpty compact toc" id="section-toc.1-1.6">
             <p id="section-toc.1-1.6.1"><a href="#section-6" class="xref">6</a>.  <a href="#name-attacks-on-elliptic-curves-" class="xref">Attacks on Elliptic Curves over Extension Fields</a><a href="#section-toc.1-1.6.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="compact toc ulEmpty" id="section-toc.1-1.7">
+          <li class="ulEmpty compact toc" id="section-toc.1-1.7">
             <p id="section-toc.1-1.7.1"><a href="#section-7" class="xref">7</a>.  <a href="#name-groups" class="xref">Groups</a><a href="#section-toc.1-1.7.1" class="pilcrow">¶</a></p>
-<ul class="compact toc ulEmpty">
-<li class="compact toc ulEmpty" id="section-toc.1-1.7.2.1">
+<ul class="ulEmpty compact toc">
+<li class="ulEmpty compact toc" id="section-toc.1-1.7.2.1">
                 <p id="section-toc.1-1.7.2.1.1"><a href="#section-7.1" class="xref">7.1</a>.  <a href="#name-ristretto255" class="xref">Ristretto255</a><a href="#section-toc.1-1.7.2.1.1" class="pilcrow">¶</a></p>
 </li>
-              <li class="compact toc ulEmpty" id="section-toc.1-1.7.2.2">
+              <li class="ulEmpty compact toc" id="section-toc.1-1.7.2.2">
                 <p id="section-toc.1-1.7.2.2.1"><a href="#section-7.2" class="xref">7.2</a>.  <a href="#name-nist-p-256" class="xref">NIST P-256</a><a href="#section-toc.1-1.7.2.2.1" class="pilcrow">¶</a></p>
 </li>
-              <li class="compact toc ulEmpty" id="section-toc.1-1.7.2.3">
+              <li class="ulEmpty compact toc" id="section-toc.1-1.7.2.3">
                 <p id="section-toc.1-1.7.2.3.1"><a href="#section-7.3" class="xref">7.3</a>.  <a href="#name-secp256k1" class="xref">secp256k1</a><a href="#section-toc.1-1.7.2.3.1" class="pilcrow">¶</a></p>
 </li>
-              <li class="compact toc ulEmpty" id="section-toc.1-1.7.2.4">
+              <li class="ulEmpty compact toc" id="section-toc.1-1.7.2.4">
                 <p id="section-toc.1-1.7.2.4.1"><a href="#section-7.4" class="xref">7.4</a>.  <a href="#name-fourq" class="xref">FourQ</a><a href="#section-toc.1-1.7.2.4.1" class="pilcrow">¶</a></p>
 </li>
-              <li class="compact toc ulEmpty" id="section-toc.1-1.7.2.5">
+              <li class="ulEmpty compact toc" id="section-toc.1-1.7.2.5">
                 <p id="section-toc.1-1.7.2.5.1"><a href="#section-7.5" class="xref">7.5</a>.  <a href="#name-finite-fields" class="xref">Finite Fields</a><a href="#section-toc.1-1.7.2.5.1" class="pilcrow">¶</a></p>
 </li>
             </ul>
 </li>
-          <li class="compact toc ulEmpty" id="section-toc.1-1.8">
+          <li class="ulEmpty compact toc" id="section-toc.1-1.8">
             <p id="section-toc.1-1.8.1"><a href="#section-8" class="xref">8</a>.  <a href="#name-security-considerations" class="xref">Security Considerations</a><a href="#section-toc.1-1.8.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="compact toc ulEmpty" id="section-toc.1-1.9">
+          <li class="ulEmpty compact toc" id="section-toc.1-1.9">
             <p id="section-toc.1-1.9.1"><a href="#section-9" class="xref">9</a>.  <a href="#name-iana-considerations" class="xref">IANA Considerations</a><a href="#section-toc.1-1.9.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="compact toc ulEmpty" id="section-toc.1-1.10">
+          <li class="ulEmpty compact toc" id="section-toc.1-1.10">
             <p id="section-toc.1-1.10.1"><a href="#section-10" class="xref">10</a>. <a href="#name-references" class="xref">References</a><a href="#section-toc.1-1.10.1" class="pilcrow">¶</a></p>
-<ul class="compact toc ulEmpty">
-<li class="compact toc ulEmpty" id="section-toc.1-1.10.2.1">
+<ul class="ulEmpty compact toc">
+<li class="ulEmpty compact toc" id="section-toc.1-1.10.2.1">
                 <p id="section-toc.1-1.10.2.1.1"><a href="#section-10.1" class="xref">10.1</a>.  <a href="#name-normative-references" class="xref">Normative References</a><a href="#section-toc.1-1.10.2.1.1" class="pilcrow">¶</a></p>
 </li>
-              <li class="compact toc ulEmpty" id="section-toc.1-1.10.2.2">
+              <li class="ulEmpty compact toc" id="section-toc.1-1.10.2.2">
                 <p id="section-toc.1-1.10.2.2.1"><a href="#section-10.2" class="xref">10.2</a>.  <a href="#name-informative-references" class="xref">Informative References</a><a href="#section-toc.1-1.10.2.2.1" class="pilcrow">¶</a></p>
 </li>
             </ul>
 </li>
-          <li class="compact toc ulEmpty" id="section-toc.1-1.11">
+          <li class="ulEmpty compact toc" id="section-toc.1-1.11">
             <p id="section-toc.1-1.11.1"><a href="#section-appendix.a" class="xref"></a><a href="#name-acknowledgments" class="xref">Acknowledgments</a><a href="#section-toc.1-1.11.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="compact toc ulEmpty" id="section-toc.1-1.12">
+          <li class="ulEmpty compact toc" id="section-toc.1-1.12">
             <p id="section-toc.1-1.12.1"><a href="#section-appendix.b" class="xref"></a><a href="#name-authors-address" class="xref">Author's Address</a><a href="#section-toc.1-1.12.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
