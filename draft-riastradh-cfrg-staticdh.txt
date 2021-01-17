@@ -80,7 +80,7 @@ Table of Contents
    5.  Generic Static DH Attacks
      5.1.  p - 1 Attack
      5.2.  p + 1 Attack in Quadratic Extension
-     5.3.  Generalizations of the p - 1 and p + 1 attacks
+     5.3.  Generalizations of the p - 1 and p + 1 Attacks
      5.4.  Multi-Target Attacks
    6.  Attacks on Elliptic Curves over Extension Fields
    7.  Groups
@@ -350,7 +350,7 @@ Table of Contents
    intensive baby-step/giant-step tables, and then extended to a random
    walk with essentially constant memory in [Cheon10].
 
-5.3.  Generalizations of the p - 1 and p + 1 attacks
+5.3.  Generalizations of the p - 1 and p + 1 Attacks
 
    The attacks were generalized in [Satoh09] to any divisor d of
    Phi_n(p), where Phi_n is the nth cyclotomic polynomial.  However, in
