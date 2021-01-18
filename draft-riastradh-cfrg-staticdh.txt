@@ -4,8 +4,8 @@
 
 Crypto Forum Research Group                                T.R. Campbell
 Internet-Draft                                          Random Float LLC
-Intended status: Informational                           17 January 2021
-Expires: 21 July 2021
+Intended status: Informational                           18 January 2021
+Expires: 22 July 2021
 
 
                 Attacks on Static Diffie-Hellman Oracles
@@ -50,7 +50,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 21 July 2021.
+   This Internet-Draft will expire on 22 July 2021.
 
 Copyright Notice
 
@@ -112,8 +112,8 @@ Table of Contents
    key agreement in TLS and static key agreement in the original
    proposal of Diffie and Hellman [DH76], use the shared secret xy*G to
    derive a key for encryption, and necessarily avoid exposing xy*G
-   itself to an adversary -- the adversary only learns the ciphertext
-   encrypted using xy*G.
+   itself to an adversary -- the adversary only learns x*G, y*G, and the
+   ciphertext encrypted using xy*G, but not xy*G itself.
 
    Newer protocols based on oblivious pseudorandom function families
    (OPRF, [I-D.irtf-cfrg-voprf]), such as OPAQUE [I-D.irtf-cfrg-opaque]
@@ -278,6 +278,18 @@ Table of Contents
    find k*(k^2*G) = k^3*G, ad nauseam, until k^q*G after q sequential
    queries.  Let p be the prime order of the group.
 
+   The baseline generic DLP attack on a prime-order group, with only
+   knowledge of G and x*G, static DH oracle, is Pollard's rho
+   [Pollard78], which costs O(sqrt{p}) group operations and O(1) memory,
+   and can be effectively parallelized with low communication cost using
+   the van Oorschot-Wiener collision search machine [OW99].  For
+   elliptic curves the negation map [WZ98] gives a small constant factor
+   improvement over generic rho for a cost of about sqrt{p * pi/4} curve
+   additions.  For other specialized DLP attacks on transfers, twists,
+   side channels, etc., we direct the reader to resources such as
+   [SafeCurves] for references and focus here on generic attacks enabled
+   by a static DH oracle.
+
 5.1.  p - 1 Attack
 
    When q >= d for a divisor d of p - 1, the adversary can recover k
@@ -373,9 +385,9 @@ Table of Contents
 
    [Kim16] extended the p - 1 attack to the multi-target setting: given
    L independent query responses (G, k_i * G, k_i^d * G) for 1 <= i <=
-   L, compute _all_ the k_i in O(sqrt(L p/d) + sqrt(L d)) scalar
+   L, compute _all_ the k_i in O(sqrt{L p/d} + sqrt{L d}) scalar
    multiplications, provided L << min(p/d, d)^{1/4}. In brief, attacking
-   a batch of L targets is sqrt(L) times cheaper than attacking each of
+   a batch of L targets is sqrt{L} times cheaper than attacking each of
    the L targets independently.
 
    However, this multi-target attack doesn't reduce the number of
@@ -386,7 +398,7 @@ Table of Contents
 
 6.  Attacks on Elliptic Curves over Extension Fields
 
-   In the group of rational points on an elliptic curve E over an
+   In the group of rational points on an elliptic curve over an
    extension field F_{q^n}, after O(q^{1 - 1/(n + 1)}) oracle queries
    (whether or not the number of queries divides p +/- 1), the adversary
    can use index calculus as in [Granger10] to solve the static DH
@@ -395,7 +407,7 @@ Table of Contents
    _need not_ be sequential, so the feasible query cost may be
    considerably higher than for [BG04]- and [Cheon06]-type attacks.
 
-   At n = 1, there is no advantage for n = 1 over rho at O(sqrt{q}) by
+   At n = 1, there is no advantage over Pollard's rho at O(sqrt{q}) by
    issuing O(sqrt{q}) static DH queries.  The cost for n = 2 is
    O(q^{2/3}) queries and O~(q^{2/3}) computation; when p = q^2 ~ 2^128,
    this reduces the cost to ~2^80 but requires ~2^80 oracle queries
@@ -691,6 +703,18 @@ Granger computational cost:                                     >2^84.6
               <https://link.springer.com/
               chapter/10.1007/978-3-540-73489-5_17>.
 
+   [OW99]     van Oorschot, P.C. and M.J. Wiener, "Parallel collision
+              search with cryptanalytic applications", IACR Journal of
+              Cryptology 12, ISSN 0933-2790, DOI 10.1007/PL00003816,
+              1999,
+              <https://link.springer.com/article/10.1007/PL00003816>.
+
+   [Pollard78]
+              Pollard, J.M., "Monte Carlo methods for index computation
+              (mod p)", AMS Mathematics of Computation, ISSN 0025-5718,
+              DOI 10.2307/2006496, 1978,
+              <https://www.jstor.org/stable/2006496>.
+
    [RFC3526]  Kivinen, T. and M. Kojo, "More Modular Exponential (MODP)
               Diffie-Hellman groups for Internet Key Exchange (IKE)",
               RFC 3526, DOI 10.17487/RFC3526, May 2003,
@@ -714,6 +738,11 @@ Granger computational cost:                                     >2^84.6
               Version 1.3", RFC 8446, DOI 10.17487/RFC8446, August 2018,
               <https://www.rfc-editor.org/info/rfc8446>.
 
+   [SafeCurves]
+              Bernstein, D.J. and T. Lange, "SafeCurves: choosing safe
+              curves for elliptic-curve cryptography", 2017,
+              <https://safecurves.cr.yp.to>.
+
    [Satoh09]  Satoh, T., "On Generalization of Cheon's algorithm",
               IACR Cryptology ePrint Archive: Report 2009/058, 2009,
               <https://eprint.iacr.org/2009/058>.
@@ -726,6 +755,13 @@ Granger computational cost:                                     >2^84.6
               Toward Concurrency in Software", Dr. Dobb's Journal 30(3),
               ISSN 1044-789X, 2005,
               <http://www.gotw.ca/publications/concurrency-ddj.htm>.
+
+   [WZ98]     Wiener, M.J. and R.J. Zuccherato, "Faster Attacks on
+              Elliptic Curve Cryptosystems", SAC 1998, Springer LNCS
+              1556, ISBN 978-3-540-65894-8,
+              DOI 10.1007/3-540-48892-8_15, 1998,
+              <https://link.springer.com/
+              chapter/10.1007/3-540-48892-8_15>.
 
 Acknowledgments
 
